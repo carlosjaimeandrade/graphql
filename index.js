@@ -3,8 +3,7 @@ const { ApolloServer, gql } = require('apollo-server')
 const usuarios = [{
     id: 1,
     nome: "joão",
-    email: "joão@gmail.com",
-    idade: 29
+    email: "joão@gmail.com"
 },
 {
     id: 2,
@@ -44,7 +43,8 @@ const typeDefs = gql`
         usuarioLogado: Usuario
         produtoEmDestaque: Produto
         numerosMegaSena: [Int!]!
-        usuarios: [Usuario]
+        usuarios: [Usuario!]!
+        usuario(id: ID): Usuario
     }
 
 `
@@ -90,6 +90,10 @@ const resolvers = {
         },
         usuarios() {
             return usuarios
+        },
+        usuario(_, args) {
+            const selecionados = usuarios.filter(u => u.id == args.id)
+            return selecionados ? selecionados[0] : null
         }
     }
 
