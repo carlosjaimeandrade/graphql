@@ -1,21 +1,29 @@
 const { ApolloServer, gql } = require('apollo-server')
 
+const perfils = [
+    { id: 1, nome: 'comum'},
+    { id: 2, nome: 'administrador'}
+]
+
 const usuarios = [{
     id: 1,
     nome: "joão",
-    email: "joão@gmail.com"
+    email: "joão@gmail.com",
+    perfil_id: 1
 },
 {
     id: 2,
     nome: "joão2",
     email: "joão2@gmail.com",
-    idade: 30 
+    idade: 30,
+    perfil_id: 2
 },
 {
     id: 3,
     nome: "joão3",
     email: "joão3@gmail.com",
-    idade: 31 
+    idade: 31,
+    perfil_id: 1
 }]
 
 const typeDefs = gql`
@@ -27,6 +35,7 @@ const typeDefs = gql`
         idade: Int
         salario: Float
         vip: Boolean
+        perfil: Perfil
     }
 
     type Produto {
@@ -34,6 +43,11 @@ const typeDefs = gql`
         preco: Float!
         desconto: Float
         precoComDesconto: Float
+    }
+
+    type Perfil {
+        id: ID
+        nome: String!
     }
 
     #PONTOS DE ENTRADAS DA SUA API
@@ -45,6 +59,8 @@ const typeDefs = gql`
         numerosMegaSena: [Int!]!
         usuarios: [Usuario!]!
         usuario(id: ID): Usuario
+        perfis: [Perfil]
+        perfil(id: ID): Perfil
     }
 
 `
@@ -53,11 +69,18 @@ const resolvers = {
     Usuario: {
         salario(usuario) {
             return usuario.salario_real
+        },
+        perfil(usuario) {
+            const selecionados = perfils.filter(p => p.id == usuario.perfil_id)
+            return selecionados ? selecionados[0]: null
         }
     },
     Produto: {
         precoComDesconto(produto) {
             return produto.preco - produto.desconto
+        },
+        nome(produto){
+            return produto.nome + " ...."
         }
     },
     Query:{
@@ -94,7 +117,14 @@ const resolvers = {
         usuario(_, args) {
             const selecionados = usuarios.filter(u => u.id == args.id)
             return selecionados ? selecionados[0] : null
-        }
+        },
+        perfis() {
+            return perfils
+        },
+        perfil(_, args) {
+            const selecionados = perfils.filter(u => u.id == args.id)
+            return selecionados ? selecionados[0] : null
+        },
     }
 
 }
