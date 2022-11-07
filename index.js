@@ -109,7 +109,7 @@ const resolvers = {
             }
         },
         numerosMegaSena() {
-            return [4,5,6,8]
+            return [1,1,2]
         },
         usuarios() {
             return usuarios
