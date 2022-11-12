@@ -137,3 +137,16 @@ const server = new ApolloServer({
 server.listen().then(({ url }) => {
     console.log(`executando em ${url}`)
 })
+
+
+//tipo de requisição usando fragmet, com ele podemos criar um tipo de retorno para evitar ficar escrevendo codigos
+// # Write your query or mutation here
+// {
+// 	usuario(id: 1) {
+//     ...UsuarioCompleto
+//   }
+// }
+
+// fragment UsuarioCompleto on Usuario {
+//   nome
+// }
